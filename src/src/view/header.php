@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>TODOリスト</title>
+	<title>TODOアプリ</title>
 	<link type="text/css" rel="stylesheet" href="css/style.css?ver=2020102101" />
 </head>
 
