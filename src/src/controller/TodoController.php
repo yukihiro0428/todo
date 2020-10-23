@@ -4,12 +4,14 @@ class TodoController
 {
 	public function index()
 	{
-		return Todo::findAll();
+		$index = new ToDo;
+		return $index->findAll();
 	}
 	public function detail()
 	{
 		$todo_id = $_GET['todo_id'];
-		return Todo::findById($todo_id);
+		$detail = new ToDo;
+		return $detail->findById($todo_id);
 	}
 	public function new()
 	{
@@ -54,7 +56,8 @@ class TodoController
 		} elseif ($_GET['id']) {
 			$todo_id = $_GET['id'];
 		}
-		$todo = Todo::findById($todo_id);
+		$edit = new ToDo;
+		$todo = $edit->findById($todo_id);
 		if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 			return $todo;
 		}
@@ -96,7 +99,8 @@ class TodoController
 	public function delete()
 	{
 		$todo_id = $_GET['todo_id'];
-		$is_exist = Todo::isExistById($todo_id);
+		$delete = new ToDo;
+		$is_exist = $delete->isExistById($todo_id);
 		if (!$is_exist) {
 			session_start();
 			$_SESSION['error_msgs'] = [

@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../model/Todo.php';
 require_once __DIR__ . '/../controller/TodoController.php';
 

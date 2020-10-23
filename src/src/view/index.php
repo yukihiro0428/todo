@@ -1,14 +1,7 @@
 <?php
-//Viewファイルは画面表示
-require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../model/Todo.php';
 require_once __DIR__ . '/../controller/TodoController.php';
-try {
-	$dbh = new PDO($dbHost, $dbUsername, $dbPassword);
-} catch (PDOException $e) {
-	echo 'データベースにアクセス出来ません！' . $e->getMessage();
-	exit;
-}
+
 //削除処理
 if (isset($_GET['action']) & !empty($_GET['action']) === true) {
 	$action = new TodoController;

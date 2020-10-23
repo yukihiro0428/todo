@@ -18,7 +18,12 @@ class Todo
 		$dbHost = 'mysql:host=' . $_ENV['DB_HOST'] . ';dbname=' . $_ENV['DB_DATABASE'] . ';charset=utf8';
 		$dbUsername = $_ENV['DB_USERNAME'];
 		$dbPassword = $_ENV['DB_PASSWORD'];
-		$this->pdo = new PDO($dbHost, $dbUsername, $dbPassword);
+		try {
+			$this->pdo = new PDO($dbHost, $dbUsername, $dbPassword);
+		} catch (PDOException $e) {
+			echo 'データベースにアクセス出来ません！' . $e->getMessage();
+			exit;
+		}
 	}
 
 
@@ -27,7 +32,6 @@ class Todo
 	{
 		return $this->id;
 	}
-
 	public function setId($id)
 	{
 		$this->id = $id;
@@ -40,7 +44,6 @@ class Todo
 	{
 		$this->title = $title;
 	}
-
 	public function getDetail()
 	{
 		return $this->detail;
@@ -58,37 +61,23 @@ class Todo
 		$this->status = $status;
 	}
 
-	public static function findByQuery($query)
+	public function findByQuery($query)
 	{
-		//オブジェクト（インスタンス）
-		$dbHost = 'mysql:host=' . $_ENV['DB_HOST'] . ';dbname=' . $_ENV['DB_DATABASE'] . ';charset=utf8';
-		$dbUsername = $_ENV['DB_USERNAME'];
-		$dbPassword = $_ENV['DB_PASSWORD'];
-		$dbh = new PDO($dbHost, $dbUsername, $dbPassword);
-		$stmt = $dbh->query($query);
-
+		$stmt = $this->pdo->query($query);
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	public static function findAll()
+	public function findAll()
 	{
-		$dbHost = 'mysql:host=' . $_ENV['DB_HOST'] . ';dbname=' . $_ENV['DB_DATABASE'] . ';charset=utf8';
-		$dbUsername = $_ENV['DB_USERNAME'];
-		$dbPassword = $_ENV['DB_PASSWORD'];
-		$dbh = new PDO($dbHost, $dbUsername, $dbPassword);
 		$query = "SELECT * FROM todos";
-		$stmt = $dbh->query($query);
-
+		$stmt = $this->pdo->query($query);
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
-	public static function findById($todo_id)
+
+	public function findById($todo_id)
 	{
 		$query = sprintf('SELECT * FROM todos WHERE id = %s', $todo_id);
-		$dbHost = 'mysql:host=' . $_ENV['DB_HOST'] . ';dbname=' . $_ENV['DB_DATABASE'] . ';charset=utf8';
-		$dbUsername = $_ENV['DB_USERNAME'];
-		$dbPassword = $_ENV['DB_PASSWORD'];
-		$dbh = new PDO($dbHost, $dbUsername, $dbPassword);
-		$stmh = $dbh->query($query);
+		$stmh = $this->pdo->query($query);
 		if ($stmh) {
 			$result = $stmh->fetch(PDO::FETCH_ASSOC);
 		} else {
@@ -97,14 +86,10 @@ class Todo
 		return $result;
 	}
 
-	public static function isExistById($todo_id)
+	public function isExistById($todo_id)
 	{
-		$dbHost = 'mysql:host=' . $_ENV['DB_HOST'] . ';dbname=' . $_ENV['DB_DATABASE'] . ';charset=utf8';
-		$dbUsername = $_ENV['DB_USERNAME'];
-		$dbPassword = $_ENV['DB_PASSWORD'];
-		$dbh = new PDO($dbHost, $dbUsername, $dbPassword);
 		$query = sprintf('SELECT * FROM todos WHERE id = %s', $todo_id);
-		$stmt = $dbh->query($query);
+		$stmt = $this->pdo->query($query);
 		if (!$stmt) {
 			return false;
 		}
@@ -136,6 +121,7 @@ class Todo
 			echo $e->getMessage();
 		}
 	}
+
 	public function update()
 	{
 		$query = sprintf(
@@ -163,21 +149,17 @@ class Todo
 	public function delete()
 	{
 		try {
-			$dbHost = 'mysql:host=' . $_ENV['DB_HOST'] . ';dbname=' . $_ENV['DB_DATABASE'] . ';charset=utf8';
-			$dbUsername = $_ENV['DB_USERNAME'];
-			$dbPassword = $_ENV['DB_PASSWORD'];
-			$dbh = new PDO($dbHost, $dbUsername, $dbPassword);
 			//トランザクション開始
-			$dbh->beginTransaction();
+			$this->pdo->beginTransaction();
 			$query = sprintf('DELETE FROM todos WHERE id = %s', $this->id);
 
-			$stmt = $dbh->prepare($query);
+			$stmt = $this->pdo->prepare($query);
 			$result = $stmt->execute();
 
-			$dbh->commit();
+			$this->pdo->commit();
 		} catch (PDOException $e) {
 			//ロールバック
-			$dbh->rollBack();
+			$this->pdo->rollBack();
 
 			echo $e->getMessage();
 			$result = false;
