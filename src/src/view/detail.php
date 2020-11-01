@@ -18,8 +18,8 @@ require 'header.php';
 		</thead>
 		<tbody>
 			<tr>
-				<td scope="row"><?php echo $todo['title'] ?></td>
-				<td><?php echo $todo['detail'] ?></td>
+				<td scope="row"><?php echo $action->escape($todo['title']); ?></td>
+				<td><?php echo $action->escape($todo['detail']); ?></td>
 			</tr>
 		</tbody>
 	</table>

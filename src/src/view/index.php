@@ -23,7 +23,7 @@ require 'header.php';
 			<?php foreach ($todo_list as $todo) : ?>
 				<li>
 					<a href="./detail.php?todo_id=<?php echo $todo['id']; ?>">
-						<?php echo $todo['title']; ?>
+						<?php echo $action->escape($todo['title']); ?>
 					</a>
 					<button class="delete_btn" data-id="<?php echo $todo['id']; ?>">削除</button>
 				</li>
