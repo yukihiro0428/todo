@@ -2,8 +2,8 @@
 //モデルファイルは、DBから値を取得したり、保存したりする処理を記述
 class Todo
 {
-	public $pdo;
 	//プロパティ
+	public $pdo;
 	public $id;
 	public $title;
 	public $detail;
@@ -152,6 +152,29 @@ class Todo
 			//トランザクション開始
 			$this->pdo->beginTransaction();
 			$query = sprintf('DELETE FROM todos WHERE id = %s', $this->id);
+
+			$stmt = $this->pdo->prepare($query);
+			$result = $stmt->execute();
+
+			$this->pdo->commit();
+		} catch (PDOException $e) {
+			//ロールバック
+			$this->pdo->rollBack();
+
+			echo $e->getMessage();
+			$result = false;
+		}
+		return $result;
+	}
+	public function completion()
+	{
+		try {
+			//トランザクション開始
+			$this->pdo->beginTransaction();
+			$query = sprintf(
+				"UPDATE todos SET completed_at = now() WHERE id = '%s';",
+				$this->id
+			);
 
 			$stmt = $this->pdo->prepare($query);
 			$result = $stmt->execute();

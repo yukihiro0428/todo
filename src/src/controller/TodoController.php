@@ -119,6 +119,30 @@ class TodoController
 
 		header("Location: ./index.php");
 	}
+
+	public function completion()
+	{
+		$todo_id = $_GET['todo_id'];
+		$completion = new Todo;
+		$is_exist = $completion->isExistById($todo_id);
+		if (!$is_exist) {
+			session_start();
+			$_SESSION['error_msgs'] = [
+				sprintf("id=%sに該当するレコードが存在しません", $todo_id)
+			];
+			header('Location: ./index.php');
+		}
+		$todo = new Todo;
+		$todo->setId($todo_id);
+		$result = $todo->completion();
+		if ($result === false) {
+			session_start();
+			$_SESSION['error_msgs'] = [sprintf('完了処理に失敗しました。 id=%s', $todo_id)];
+		}
+
+		header("Location: ./index.php");
+	}
+
 	public function escape($string)
 	{
 		return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');

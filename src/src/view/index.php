@@ -3,11 +3,15 @@ require_once __DIR__ . '/../model/Todo.php';
 require_once __DIR__ . '/../controller/TodoController.php';
 
 //削除処理
-if (isset($_GET['action']) & !empty($_GET['action']) === true) {
+if (isset($_GET['action_delete']) & !empty($_GET['action_delete']) === true) {
 	$action = new TodoController;
 	$todo_list = $action->delete();
 }
-
+//完了処理
+if (isset($_GET['action_completion']) & !empty($_GET['action_completion']) === true) {
+	$action = new TodoController;
+	$todo_list = $action->completion();
+}
 $action = new TodoController;
 $todo_list = $action->index();
 
@@ -25,7 +29,12 @@ require 'header.php';
 					<a href="./detail.php?todo_id=<?php echo $todo['id']; ?>">
 						<?php echo $action->escape($todo['title']); ?>
 					</a>
-					<button class="delete_btn" data-id="<?php echo $todo['id']; ?>">削除</button>
+					<button class="delete_btn" data-id="<?php echo $todo['id']; ?>">削除ボタン</button>
+					<p class="completion"><button class="completion_btn" data-id="<?php echo $todo['id']; ?>">完了ボタン</button>
+						<?php if (isset($todo['completed_at'])) : ?>
+							<span>タスク完了時刻：<?php echo $todo['completed_at'] ?></span>
+						<?php endif; ?>
+					</p>
 				</li>
 			<?php endforeach; ?>
 		</ul>
@@ -40,12 +49,24 @@ require 'header.php';
 
 </html>
 <script>
+	//削除処理
 	$('.delete_btn').on('click', function() {
 		let message = "id='" + $(this).data('id') + "'を消しますか";
 		let judge = confirm(message);
 		if (judge == true) {
 			let todo_id = $(this).data('id');
-			window.location.href = "./index.php?action=delete&todo_id=" + todo_id;
+			window.location.href = "./index.php?action_delete=delete&todo_id=" + todo_id;
+		} else if (judge == false) {
+			window.location.href = "./index.php";
+		}
+	});
+	//完了処理
+	$('.completion_btn').on('click', function() {
+		let message = "id='" + $(this).data('id') + "'の実行を完了しますか";
+		let judge = confirm(message);
+		if (judge == true) {
+			let todo_id = $(this).data('id');
+			window.location.href = "./index.php?action_completion=completion&todo_id=" + todo_id;
 		} else if (judge == false) {
 			window.location.href = "./index.php";
 		}

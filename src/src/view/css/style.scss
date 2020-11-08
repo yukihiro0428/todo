@@ -277,14 +277,21 @@ input:focus {
   .delete_btn {
     position: absolute;
     right: 0;
-    top: 50%;
-    -ms-transform: translate(0, -50%);
-    -webkit-transform: translate(0, -50%);
-    transform: translate(0, -50%);
+    bottom: 0;
     color: #67c5ff;
     border: solid 2px #67c5ff;
     &:hover {
       background: #67c5ff;
+    }
+  }
+  .completion {
+    color: #333333;
+  }
+  .completion_btn {
+    color: #333333;
+    border: solid 2px #66ff33;
+    &:hover {
+      background: #66ff33;
     }
   }
   .edit-btn {
