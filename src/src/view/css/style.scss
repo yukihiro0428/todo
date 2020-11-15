@@ -300,6 +300,13 @@ input:focus {
       background: #66ff33;
     }
   }
+  .cancel_btn {
+    color: #333333;
+    border: solid 2px #bbbbbb;
+    &:hover {
+      background: #bbbbbb;
+    }
+  }
   .edit-btn {
     color: #ff9800;
     border: solid 2px #ff9800;
