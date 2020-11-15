@@ -139,7 +139,28 @@ class TodoController
 			session_start();
 			$_SESSION['error_msgs'] = [sprintf('完了処理に失敗しました。 id=%s', $todo_id)];
 		}
+		header("Location: ./index.php");
+	}
 
+	public function completionCancel()
+	{
+		$todo_id = $_GET['todo_id'];
+		$completionCancel = new Todo;
+		$is_exist = $completionCancel->isExistById($todo_id);
+		if (!$is_exist) {
+			session_start();
+			$_SESSION['error_msgs'] = [
+				sprintf("id=%sに該当するレコードが存在しません", $todo_id)
+			];
+			header('Location: ./index.php');
+		}
+		$todo = new Todo;
+		$todo->setId($todo_id);
+		$result = $todo->completionCancel();
+		if ($result === false) {
+			session_start();
+			$_SESSION['error_msgs'] = [sprintf('完了キャンセル処理に失敗しました。 id=%s', $todo_id)];
+		}
 		header("Location: ./index.php");
 	}
 
